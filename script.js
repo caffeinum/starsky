@@ -21,6 +21,10 @@ function CanvasWrapper ( canvasId ) {
         cnt.arc( centerX, centerY, radius, 0, 2*Math.PI );
         cnt.fill();
     };
+    
+    this.drawImage = function (img, cx,cy,cw,ch, x,y,w,h) {
+        cnt.drawImage(img,cx,cy,cw,ch,x,y,w,h);
+    };
 }
 
 function Sky() {
@@ -33,7 +37,7 @@ function Sky() {
         sun.x = x; sun.y = y;
         sun.speedX = 0;
         sun.speedY = 0;
-        sun.radius = 20;
+        sun.radius = 50;
         console.log( sun );
     };
     
@@ -72,39 +76,101 @@ function Sky() {
     this.moveSun = function () {
         sun.x += sun.speedX;
         sun.y += sun.speedY;
-        
+        /*
         if ( sun.x <= 0 + sun.radius || sun.x >= 1200 - sun.radius ) sun.speedX *= -1;
         if ( sun.y <= 0 + sun.radius || sun.y >=  800 - sun.radius ) sun.speedY *= -1;
+        */
+        
+        if ( sun.x <=    0 ) sun.x += 1200;
+        if ( sun.x >= 1200 ) sun.x -= 1200;
+        
+        if ( sun.y <=   0 ) sun.y += 800;
+        if ( sun.y >= 800 ) sun.y -= 800;
     };
     
     this.drawSun = function () {
         cnt.drawCircle( sun.x, sun.y, sun.radius, "#ffffaa" );
+        
+        if ( sun.x <=    0 + sun.radius )
+        cnt.drawCircle( sun.x + 1200, sun.y, sun.radius, "#ffffaa" ); 
+        if ( sun.x >= 1200 - sun.radius ) 
+        cnt.drawCircle( sun.x - 1200, sun.y, sun.radius, "#ffffaa" );
+        
+        if ( sun.y <=   0 + sun.radius ) 
+        cnt.drawCircle( sun.x, sun.y + 800, sun.radius, "#ffffaa" );
+        if ( sun.y >= 800 - sun.radius ) 
+        cnt.drawCircle( sun.x, sun.y - 800, sun.radius, "#ffffaa" );
     };
     
     this.drawStars = function () {
         var x, y, r;
-        var starsLeft = 0;
         stars.forEach(function ( star ) {
+            //red dot where star should be
+            cnt.drawCircle( star.x, star.y, 1, "#ff0000" );
+            
+            //distance from the center of the sun to the star
             r = Math.sqrt( (sun.x-star.x)*(sun.x-star.x) + (sun.y-star.y)*(sun.y-star.y) );
             
+            //easter egg
+            if ( r === 0 ) sky.startNyanCat();
+            
+            if ( r < 50 ) console.log( r );
+            
+            //effect when star becomes invisible because its light is blocked by sun disk
+            if ( r < 40 ) return;
+            
+            //new coordinates: r = r + 500 / r (vectors)
             x = star.x + 500 * (star.x - sun.x) / r / r;
             y = star.y + 500 * (star.y - sun.y) / r / r;
             
-    //        console.log( x - star.x );
-            r = Math.sqrt( (sun.x-x)*(sun.x-x) + (sun.y-y)*(sun.y-y) );
-            
-            if ( r < sun.radius ) star.color = "#000000";
-            if ( star.color === "#ffffff" ) starsLeft++;
-            
-            
+            //draw star where we see it
             cnt.drawCircle( x, y, 2, star.color );
-            cnt.drawCircle( star.x, star.y, 1, "#ff0000" );
         });
-        
-        if ( ! starsLeft ) alert("You win!");
-        else console.log( starsLeft );
     };
       
+      
+    this.drawNyan = function() {};
+    
+    this.startNyanCat = function () {
+        var x = -200, y = 600;
+        
+        var img_obj = {
+            'source': null,
+            'current': 0,
+            'total_frames': 6,
+            'width': 142,
+            'height': 87
+        };
+        
+        var img = new Image();
+        var rainbow = new Image();
+        
+        img.onload = function () {
+            img_obj.source = img;
+        };
+        
+        rainbow.src = 'img/rainbow.png';
+        img.src = 'img/nyan.png';
+        
+        this.drawNyan = function () {
+            x += 1;
+            
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 1 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 2 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 3 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 4 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            
+            if (img_obj.source !== null)
+                cnt.drawImage(img_obj.source,
+                    Math.floor(img_obj.current) * img_obj.width, 0,
+                    img_obj.width, img_obj.height,
+                    x - img_obj.width/2, y - img_obj.height/2,
+                    img_obj.width, img_obj.height);
+
+            img_obj.current = (img_obj.current + .1) % img_obj.total_frames;
+        };
+    }; 
+     
     this.move = function () {
         cnt.clear();
         cnt.fillRect( 0, 0, 1200, 800);
@@ -112,7 +178,9 @@ function Sky() {
         sky.moveSun();
         sky.drawSun();
         
-        sky.drawStars();        
+        sky.drawStars();
+        
+        sky.drawNyan();
     }
 }
 
@@ -139,6 +207,8 @@ $(document).ready(function () {
     }
     
     sky.setStars( stars );
+    
+    //sky.startNyanCat();
     
     var step = setInterval(sky.move, 10);
 });
