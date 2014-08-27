@@ -115,11 +115,11 @@ function Sky() {
             if ( r === 0 ) sky.startNyanCat();
 
             //effect when star becomes invisible because its light is blocked by sun disk
-            if ( r < 40 ) return;
+            if ( r < 10 ) return;
             
             //new coordinates: r = r + 500 / r (vectors)
-            x = star.x + 500 * (star.x - sun.x) / r / r;
-            y = star.y + 500 * (star.y - sun.y) / r / r;
+            x = star.x + 1000 * (star.x - sun.x) / r / r;
+            y = star.y + 1000 * (star.y - sun.y) / r / r;
             
             //draw star where we see it
             cnt.drawCircle( x, y, 2, star.color );
