@@ -31,6 +31,31 @@ function CanvasWrapper ( canvasId ) {
         cnt.fillStyle = "#ffffff";
         cnt.fillText(text, 500,400);
     };
+    
+    this.drawLine = function (x1, y1, x2, y2, color) {
+        
+        cnt.strokeStyle = color || "#ffffff";
+        
+        cnt.beginPath();
+        cnt.moveTo(x1, y1);
+        cnt.lineTo(x2, y2);
+        cnt.stroke();
+        return Math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) );
+    };
+    
+    this.moveTo = function (x, y, color) {
+        
+        cnt.strokeStyle = color || "#ffffff";
+        
+        cnt.beginPath();
+        cnt.moveTo(x, y);
+    }
+    this.lineTo = function (x, y) {
+        cnt.lineTo(x, y);
+    }
+    this.stroke = function () {
+        cnt.stroke();
+    }
 }
 
 function Sky() {
@@ -58,11 +83,6 @@ function Sky() {
         sun.speedX = speedX;
         sun.speedY = speedY;
         return sun.speedX*sun.speedX + sun.speedY*sun.speedY;
-    };
-    
-    this.click = function ( x, y ) {
-        this.setSun( x, y, 0, 0 );
-        return false;
     };
     
     this.getStars = function (n) {
@@ -98,26 +118,26 @@ function Sky() {
         sun.x += sun.speedX;
         sun.y += sun.speedY;
 
-        if ( sun.isCrazy ) {
-            if ( sun.x <= 0 + sun.radius || sun.x >= 1200 - sun.radius ) sun.speedX *= -1;
-            if ( sun.y <= 0 + sun.radius || sun.y >=  800 - sun.radius ) sun.speedY *= -1;
-        } else {
+        //if ( sun.isCrazy ) {
+            if ( sun.x <= -1200 + sun.radius || sun.x >= 2400 - sun.radius ) sun.speedX *= -1;
+            if ( sun.y <=  -800 + sun.radius || sun.y >= 1600 - sun.radius ) sun.speedY *= -1;
+        /*} else {
 
-            if ( sun.x <=    0 - sun.radius ||
-                 sun.x >= 1200 + sun.radius ||
-                 sun.y <=    0 - sun.radius ||
-                 sun.y >=  800 + sun.radius )
+            if ( sun.x <= -10000 - sun.radius ||
+                 sun.x >=  10000 + sun.radius ||
+                 sun.y <= -10000 - sun.radius ||
+                 sun.y >=  10000 + sun.radius )
                 sky.startNyanCat();
-            /*
+            
             if ( sun.x <=    0 - sun.radius ) sun.x += 1200 + 2 * sun.radius;
             if ( sun.x >= 1200 + sun.radius ) sun.x -= 1200 + 2 * sun.radius;
 
             if ( sun.y <=   0 - sun.radius ) sun.y += 800 + 2 * sun.radius;
             if ( sun.y >= 800 + sun.radius ) sun.y -= 800 + 2 * sun.radius;
-            */
+            
            
             
-        }
+        }*/
     };
     
     this.drawSun = function () {
@@ -158,14 +178,13 @@ function Sky() {
             cnt.drawCircle( x, y, 2, star.color );
         });
     };
-      
-      
+
     this.drawNyan = function() {};
     
     this.startNyanCat = function () {
-        this.setStars( 0 );
-        this.setSun(600, 400, 'crazy');
-        this.setSunSpeed(20, 20);
+        //this.setStars( 0 );
+        //this.setSun(600, 400, 'crazy');
+        //this.setSunSpeed(20, 20);
         
         var img_obj = {
             'source': null,
@@ -175,7 +194,7 @@ function Sky() {
             'height': 87
         };
         
-        var x = 600 - 2 * img_obj.width, y = 600;
+        var x = -img_obj.width, y = 600;
         
         var img = new Image();
         var rainbow = new Image();
@@ -192,21 +211,17 @@ function Sky() {
         audio.play();*/
         
         var finish = function () {
-            cnt.canvas.removeEventListener('click', finish);
-            
             sky.drawNyan = function () {};
-            sky.start(600, 400, 200, 50);
+            //sky.start(600, 400, 200, 50);
         };
-        
-        cnt.canvas.addEventListener('click', finish);
         
         this.drawNyan = function () {
             x += 2;
             
-            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, 600 - 2 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
-            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, 600 - 1 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
-            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, 600 + 0 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
-            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, 600 + 1 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 4 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 3 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 2 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 1 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
             
             if (img_obj.source !== null)
                 cnt.drawImage(img_obj.source,
@@ -217,17 +232,15 @@ function Sky() {
 
             img_obj.current = (img_obj.current + .1) % img_obj.total_frames;
             
-            cnt.drawText("Loading...");
-            
             // stop Nyan
-            if ( x > 600 + 2 * img_obj.width )//1200 + 4 * img_obj.width )
+            if ( x > 1200 + 4 * img_obj.width )
             {
                 finish();
             }
         };
     }; 
      
-    this.move = function () {
+    this.draw = function () {
         cnt.clear();
         cnt.fillRect( 0, 0, 1200, 800);
 
@@ -262,11 +275,100 @@ function Sky() {
 
         //sky.startNyanCat();
 
-        var step = setInterval(this.move, Math.round(1000 / fps));
+        var step = setInterval(this.draw, Math.round(1000 / fps));
     };
 }
 
+function Scheme (canvasId) {
+    var scheme = this;
+    var cnt = new CanvasWrapper( canvasId );
+    var sun = {}, star = {};
+    
+    this.setSun = function ( x, y ) {
+        sun.x = x; sun.y = y;
+        sun.speed = 0;
+        sun.radius = 50;
+        console.log( sun );
+    };
+    this.setStar = function ( x, y ) {
+        star.x = x; star.y = y;
+    };
+    
+    this.setSunSpeed = function ( speed ) {
+        sun.speed = speed;
+    };
+    
+    this.moveSun = function () {
+        sun.x += sun.speed;
+    };
+    
+    this.drawSun = function () {
+        cnt.drawCircle( sun.x, sun.y, sun.radius, "#ffffaa" );
+    };
+    this.drawStar = function () {
+        cnt.drawCircle( star.x, star.y, 1, "#ff0000" );
+            
+        //distance from the center of the sun to the star
+        //r = Math.sqrt( (sun.x-star.x)*(sun.x-star.x) + (sun.y-star.y)*(sun.y-star.y) );
+        r = star.x - sun.x;
+        //effect when star becomes invisible because its light is blocked by sun disk
+        
+
+        //new coordinates: r = r + 500 / r (vectors)
+        x = star.x + 3000 / r;
+//        y = star.y + 1000 * (star.y - sun.y) / r / r;
+
+        //draw star where we see it
+        cnt.drawCircle( x, star.y, 2, "#ffffff" );
+        
+        if ( Math.abs(r) > 20 )
+            cnt.drawLine( 600, 600, x, star.y, "#ffffff" );
+        
+        x = 600; var y = 600;
+        cnt.moveTo(x, y, "#ff0000");
+        for ( y = 600; y > 0; y-= 1 ) {
+          // need actual hyperbola
+            x = r / ( 600 - y ) + 600;
+            
+            cnt.lineTo(x, y);
+        }
+        //cnt.stroke();
+    };
+    this.draw = function () {
+        cnt.clear();
+        cnt.fillRect( 0, 0, 1200, 800);
+
+        cnt.drawCircle(600,600,1,"#0000ff");
+        
+        scheme.moveSun();
+        scheme.drawSun();
+        
+        scheme.drawStar();
+        
+    };
+    this.start = function ( fps ) {
+        scheme.setSun(600, 400);
+        scheme.setStar(600, 0);
+        
+        cnt.canvas.addEventListener('click', function (event) {
+            if ( event.offsetX && event.offsetY )
+                scheme.setSunSpeed( (event.offsetX - sun.x) / 100 );
+        });
+
+        cnt.canvas.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
+            if ( event.offsetX && event.offsetY )
+                scheme.setSun( event.offsetX, sun.y );
+            return false;
+        });
+        
+         var step = setInterval(this.draw, Math.round(1000 / fps));
+    };
+}
 $(document).ready(function () {
     var sky = new Sky();
     sky.start(300, 400, 200, 100);
+    
+    var exp = new Scheme('explain');
+    exp.start( 50 );
 });
