@@ -115,7 +115,7 @@ function Sky() {
             if ( r === 0 ) sky.startNyanCat();
 
             //effect when star becomes invisible because its light is blocked by sun disk
-            if ( r < 20 ) return;
+            if ( r < 40 ) return;
             
             //new coordinates: r = r + 500 / r (vectors)
             x = star.x + 500 * (star.x - sun.x) / r / r;
