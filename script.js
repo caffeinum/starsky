@@ -159,11 +159,9 @@ function Sky() {
     this.startNyanCat = function () {
         this.setStars( 0 );
         this.setSun(600, 400, 'crazy');
-        this.setSunSpeed(100, 100);
+        this.setSunSpeed(50, 50);
         
-        
-        
-        var x = -100, y = 600;
+        var x = 500, y = 600;
         
         var img_obj = {
             'source': null,
@@ -183,13 +181,12 @@ function Sky() {
         rainbow.src = 'img/rainbow.png';
         img.src = 'img/nyan.png';
         
-        var audio = new Audio('Nyan_cat.ogg');
+        /*var audio = new Audio('Nyan_cat.ogg');
         audio.loop = true;
-        audio.play();
+        audio.play();*/
         
         var finish = function () {
             cnt.canvas.removeEventListener('click', finish);
-            audio.stop();
             
             sky.drawNyan = function () {};
             sky.start(600, 400, 200, 50);
@@ -215,7 +212,7 @@ function Sky() {
             img_obj.current = (img_obj.current + .1) % img_obj.total_frames;
             
             // stop Nyan
-            if ( x > 1200 + 4 * img_obj.width )
+            if ( x > 600 )//1200 + 4 * img_obj.width )
             {
                 finish();
             }
