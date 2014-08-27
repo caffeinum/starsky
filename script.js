@@ -306,6 +306,7 @@ function Scheme (canvasId) {
         cnt.drawCircle( sun.x, sun.y, sun.radius, "#ffffaa" );
     };
     this.drawStar = function () {
+        var x, y, r;
         cnt.drawCircle( star.x, star.y, 1, "#ff0000" );
             
         //distance from the center of the sun to the star
@@ -338,7 +339,7 @@ function Scheme (canvasId) {
         cnt.clear();
         cnt.fillRect( 0, 0, 1200, 800);
 
-        cnt.drawCircle(600,600,1,"#0000ff");
+        cnt.drawCircle(600,600,5,"#0000ff");
         
         scheme.moveSun();
         scheme.drawSun();
