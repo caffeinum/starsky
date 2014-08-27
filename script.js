@@ -159,9 +159,7 @@ function Sky() {
     this.startNyanCat = function () {
         this.setStars( 0 );
         this.setSun(600, 400, 'crazy');
-        this.setSunSpeed(50, 50);
-        
-        var x = 500, y = 600;
+        this.setSunSpeed(20, 20);
         
         var img_obj = {
             'source': null,
@@ -170,6 +168,8 @@ function Sky() {
             'width': 142,
             'height': 87
         };
+        
+        var x = 600 - 2 * img_obj.width, y = 600;
         
         var img = new Image();
         var rainbow = new Image();
@@ -195,12 +195,12 @@ function Sky() {
         cnt.canvas.addEventListener('click', finish);
         
         this.drawNyan = function () {
-            x += 1;
+            x += 2;
             
-            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 1 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
-            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 2 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
-            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 3 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
-            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, x - 4 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, 600 - 2 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, 600 - 1 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, 600 + 0 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
+            cnt.drawImage(rainbow, Math.floor(img_obj.current/3 % 2) * 40, 0, 160, 104, 600 + 1 * img_obj.width, y - img_obj.height/2, img_obj.width, img_obj.height);
             
             if (img_obj.source !== null)
                 cnt.drawImage(img_obj.source,
@@ -212,7 +212,7 @@ function Sky() {
             img_obj.current = (img_obj.current + .1) % img_obj.total_frames;
             
             // stop Nyan
-            if ( x > 600 )//1200 + 4 * img_obj.width )
+            if ( x > 600 + 2 * img_obj.width )//1200 + 4 * img_obj.width )
             {
                 finish();
             }
