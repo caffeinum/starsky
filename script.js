@@ -25,6 +25,12 @@ function CanvasWrapper ( canvasId ) {
     this.drawImage = function (img, cx,cy,cw,ch, x,y,w,h) {
         cnt.drawImage(img,cx,cy,cw,ch,x,y,w,h);
     };
+    
+    this.drawText = function (text) {
+        cnt.font = "36px Verdana";
+        cnt.fillStyle = "#ffffff";
+        cnt.fillText(text, 500,400);
+    };
 }
 
 function Sky() {
@@ -210,6 +216,8 @@ function Sky() {
                     img_obj.width, img_obj.height);
 
             img_obj.current = (img_obj.current + .1) % img_obj.total_frames;
+            
+            cnt.drawText("Loading...");
             
             // stop Nyan
             if ( x > 600 + 2 * img_obj.width )//1200 + 4 * img_obj.width )
