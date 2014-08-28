@@ -49,13 +49,19 @@ function CanvasWrapper ( canvasId ) {
         
         cnt.beginPath();
         cnt.moveTo(x, y);
-    }
+    };
     this.lineTo = function (x, y) {
         cnt.lineTo(x, y);
-    }
+    };
     this.stroke = function () {
         cnt.stroke();
-    }
+    };
+    this.arc = function (x,y,x1,y1,x2,y2,radius) {
+        cnt.beginPath();
+        cnt.moveTo(x,y);
+        cnt.arcTo(x1,y1,x2,y2,radius);
+        cnt.stroke();
+    };
 }
 
 function Sky() {
@@ -118,41 +124,12 @@ function Sky() {
         sun.x += sun.speedX;
         sun.y += sun.speedY;
 
-        //if ( sun.isCrazy ) {
-            if ( sun.x <= -1200 + sun.radius || sun.x >= 2400 - sun.radius ) sun.speedX *= -1;
-            if ( sun.y <=  -800 + sun.radius || sun.y >= 1600 - sun.radius ) sun.speedY *= -1;
-        /*} else {
-
-            if ( sun.x <= -10000 - sun.radius ||
-                 sun.x >=  10000 + sun.radius ||
-                 sun.y <= -10000 - sun.radius ||
-                 sun.y >=  10000 + sun.radius )
-                sky.startNyanCat();
-            
-            if ( sun.x <=    0 - sun.radius ) sun.x += 1200 + 2 * sun.radius;
-            if ( sun.x >= 1200 + sun.radius ) sun.x -= 1200 + 2 * sun.radius;
-
-            if ( sun.y <=   0 - sun.radius ) sun.y += 800 + 2 * sun.radius;
-            if ( sun.y >= 800 + sun.radius ) sun.y -= 800 + 2 * sun.radius;
-            
-           
-            
-        }*/
+        if ( sun.x <= -1200 + sun.radius || sun.x >= 2400 - sun.radius ) sun.speedX *= -1;
+        if ( sun.y <=  -800 + sun.radius || sun.y >= 1600 - sun.radius ) sun.speedY *= -1;
     };
     
     this.drawSun = function () {
         cnt.drawCircle( sun.x, sun.y, sun.radius, "#ffffaa" );
-        /*
-        if ( sun.x <=    0 - sun.radius )
-        cnt.drawCircle( sun.x + 1200, sun.y, sun.radius, "#ffffaa" ); 
-        if ( sun.x >= 1200 + sun.radius ) 
-        cnt.drawCircle( sun.x - 1200, sun.y, sun.radius, "#ffffaa" );
-        
-        if ( sun.y <=   0 - sun.radius ) 
-        cnt.drawCircle( sun.x, sun.y + 800, sun.radius, "#ffffaa" );
-        if ( sun.y >= 800 + sun.radius ) 
-        cnt.drawCircle( sun.x, sun.y - 800, sun.radius, "#ffffaa" );
-        */
     };
     
     this.drawStars = function () {
@@ -324,16 +301,6 @@ function Scheme (canvasId) {
         
         if ( Math.abs(r) > 20 )
             cnt.drawLine( 600, 600, x, star.y, "#ffffff" );
-        
-        x = 600; var y = 600;
-        cnt.moveTo(x, y, "#ff0000");
-        for ( y = 600; y > 0; y-= 1 ) {
-          // need actual hyperbola
-            x = r / ( 600 - y ) + 600;
-            
-            cnt.lineTo(x, y);
-        }
-        //cnt.stroke();
     };
     this.draw = function () {
         cnt.clear();
