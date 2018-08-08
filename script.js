@@ -250,7 +250,7 @@ function Sky() {
         
         sky.setStars( starsN );
 
-        //sky.startNyanCat();
+        sky.startNyanCat();
 
         var step = setInterval(this.draw, Math.round(1000 / fps));
     };
