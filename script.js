@@ -183,9 +183,9 @@ function Sky() {
         rainbow.src = 'img/rainbow.png';
         img.src = 'img/nyan.png';
         
-        /*var audio = new Audio('Nyan_cat.ogg');
+        var audio = new Audio('Nyan_cat.ogg');
         audio.loop = true;
-        audio.play();*/
+        audio.play();
         
         var finish = function () {
             sky.drawNyan = function () {};
